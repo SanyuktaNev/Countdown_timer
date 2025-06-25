@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 const DigitalCountdown = () => {
   // Start with 24 hours in seconds
   const [timeLeft, setTimeLeft] = useState(24 * 60 * 60);
-  const [isActive, setIsActive] = useState(true);
+  const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
@@ -36,8 +36,12 @@ const DigitalCountdown = () => {
 
   const { hours, minutes, seconds } = formatTime(timeLeft);
 
-  const toggleTimer = () => {
-    setIsActive(!isActive);
+  const startTimer = () => {
+    setIsActive(true);
+  };
+
+  const pauseTimer = () => {
+    setIsActive(false);
   };
 
   const resetTimer = () => {
@@ -115,28 +119,19 @@ const DigitalCountdown = () => {
           </div>
         </div>
 
-        {/* Progress bar */}
-        <div className="mb-6">
-          <div className="bg-gray-800 h-2 rounded-full overflow-hidden border border-cyan-500/30">
-            <div 
-              className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 transition-all duration-1000 relative"
-              style={{ width: `${((24 * 60 * 60 - timeLeft) / (24 * 60 * 60)) * 100}%` }}
-            >
-              <div className="absolute inset-0 bg-white/20 animate-pulse"></div>
-            </div>
-          </div>
-          <div className="text-xs text-cyan-300 mt-1 font-mono text-center">
-            PROGRESS: {(((24 * 60 * 60 - timeLeft) / (24 * 60 * 60)) * 100).toFixed(1)}%
-          </div>
-        </div>
-
         {/* Control buttons */}
-        <div className="flex justify-center space-x-4">
+        <div className="flex justify-center space-x-4 mb-6">
           <button
-            onClick={toggleTimer}
-            className="bg-cyan-600 hover:bg-cyan-500 text-white px-6 py-2 rounded-lg font-mono text-sm border border-cyan-400 transition-all duration-200 hover:shadow-lg hover:shadow-cyan-500/25"
+            onClick={startTimer}
+            className="bg-green-600 hover:bg-green-500 text-white px-6 py-2 rounded-lg font-mono text-sm border border-green-400 transition-all duration-200 hover:shadow-lg hover:shadow-green-500/25"
           >
-            {isActive ? 'PAUSE' : 'START'}
+            START
+          </button>
+          <button
+            onClick={pauseTimer}
+            className="bg-yellow-600 hover:bg-yellow-500 text-white px-6 py-2 rounded-lg font-mono text-sm border border-yellow-400 transition-all duration-200 hover:shadow-lg hover:shadow-yellow-500/25"
+          >
+            PAUSE
           </button>
           <button
             onClick={resetTimer}
@@ -147,7 +142,7 @@ const DigitalCountdown = () => {
         </div>
 
         {/* Status indicator */}
-        <div className="mt-6 text-center">
+        <div className="text-center">
           <div className={`inline-flex items-center space-x-2 px-3 py-1 rounded-full border ${
             timeLeft === 0 
               ? 'bg-red-900/50 border-red-500 text-red-400' 
