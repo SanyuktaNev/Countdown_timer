@@ -59,7 +59,7 @@ const DigitalCountdown = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-2xl font-mono text-cyan-400 mb-2 tracking-wider">
-            DIGITAL COUNTDOWN
+            INCEPTIA
           </h1>
           <div className="h-px bg-gradient-to-r from-transparent via-cyan-500 to-transparent"></div>
         </div>
