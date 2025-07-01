@@ -55,7 +55,7 @@ const App = () => {
                   {stage === "intro" && (
                     <video
                       ref={introRef}
-                      src="/clips/intro.mp4"
+                      src="/clips/intro.webm"
                       className="w-full h-auto"
                       controls={false}
                       playsInline
@@ -73,7 +73,7 @@ const App = () => {
                   {stage === "outro" && (
                     <video
                       ref={outroRef}
-                      src="/clips/outro.mp4"
+                      src="/clips/outro.webm"
                       className="w-full h-auto"
                       autoPlay
                       playsInline
