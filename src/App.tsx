@@ -14,22 +14,12 @@ const App = () => {
   const introRef = useRef<HTMLVideoElement>(null);
   const outroRef = useRef<HTMLVideoElement>(null);
 
+  // Auto-play intro when component mounts
   useEffect(() => {
     if (stage === "intro" && introRef.current) {
-      const playPromise = introRef.current.play();
-      if (playPromise !== undefined) {
-        playPromise.catch((error) => {
-          console.error("Intro autoplay error:", error);
-        });
-      }
-    }
-    if (stage === "outro" && outroRef.current) {
-      const playPromise = outroRef.current.play();
-      if (playPromise !== undefined) {
-        playPromise.catch((error) => {
-          console.error("Outro autoplay error:", error);
-        });
-      }
+      introRef.current.play().catch((err) => {
+        console.warn("Autoplay blocked:", err);
+      });
     }
   }, [stage]);
 
@@ -39,6 +29,11 @@ const App = () => {
 
   const handleStartOutro = () => {
     setStage("outro");
+    setTimeout(() => {
+      outroRef.current?.play().catch((err) => {
+        console.warn("Outro play error:", err);
+      });
+    }, 100);
   };
 
   return (
@@ -58,9 +53,8 @@ const App = () => {
                       src="/clips/intro.webm"
                       className="w-full h-auto"
                       autoPlay
+                      muted
                       playsInline
-                      controls={false}
-                      muted={false}
                       onEnded={handleIntroEnd}
                     />
                   )}
@@ -78,9 +72,9 @@ const App = () => {
                       src="/clips/outro.webm"
                       className="w-full h-auto"
                       autoPlay
-                      playsInline
-                      controls={false}
                       muted={false}
+                      playsInline
+                      controls
                     />
                   )}
                 </div>
