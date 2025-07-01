@@ -48,7 +48,7 @@ const App = () => {
                       onClick={handleStart}
                       className="bg-cyan-600 hover:bg-cyan-500 text-white px-8 py-3 rounded-xl font-mono text-lg border border-cyan-400 transition-all"
                     >
-                      Start Experience
+                      Start Timer
                     </button>
                   )}
 
