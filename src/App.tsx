@@ -10,15 +10,11 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 const App = () => {
-  const [stage, setStage] = useState<"intro" | "timer" | "outro" | "start">("start");
-  const introRef = useRef<HTMLVideoElement>(null);
+  const [stage, setStage] = useState<"idle" | "intro" | "timer" | "outro">("idle");
   const outroRef = useRef<HTMLVideoElement>(null);
 
   const handleStart = () => {
     setStage("intro");
-    setTimeout(() => {
-      introRef.current?.play();
-    }, 100);
   };
 
   const handleIntroEnd = () => {
@@ -28,7 +24,12 @@ const App = () => {
   const handleStartOutro = () => {
     setStage("outro");
     setTimeout(() => {
-      outroRef.current?.play();
+      outroRef.current?.play().catch(() => {
+        if (outroRef.current) {
+          outroRef.current.muted = true;
+          outroRef.current.play();
+        }
+      });
     }, 100);
   };
 
@@ -42,11 +43,11 @@ const App = () => {
             <Route
               path="/"
               element={
-                <div className="min-h-screen bg-black flex items-center justify-center">
-                  {stage === "start" && (
+                <div className="min-h-screen bg-black flex items-center justify-center p-4">
+                  {stage === "idle" && (
                     <button
-                      onClick={handleStart}
                       className="bg-cyan-600 hover:bg-cyan-500 text-white px-8 py-3 rounded-xl font-mono text-lg border border-cyan-400 transition-all"
+                      onClick={handleStart}
                     >
                       Start Timer
                     </button>
@@ -54,12 +55,13 @@ const App = () => {
 
                   {stage === "intro" && (
                     <video
-                      ref={introRef}
                       src="/clips/intro.webm"
                       className="w-full h-auto"
-                      controls={false}
+                      autoPlay
+                      muted={false}
                       playsInline
                       onEnded={handleIntroEnd}
+                      controls={false}
                     />
                   )}
 
@@ -76,8 +78,9 @@ const App = () => {
                       src="/clips/outro.webm"
                       className="w-full h-auto"
                       autoPlay
+                      muted={false}
                       playsInline
-                      controls
+                      controls={false} // ✅ No buttons shown
                     />
                   )}
                 </div>
