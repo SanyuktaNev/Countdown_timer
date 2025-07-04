@@ -10,15 +10,19 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 const App = () => {
-  const [stage, setStage] = useState<"idle" | "intro" | "timer" | "outro">("idle");
+  const [stage, setStage] = useState<"start" | "intro" | "fade" | "timer" | "outro">("start");
   const outroRef = useRef<HTMLVideoElement>(null);
+  const [fadeOutIntro, setFadeOutIntro] = useState(false);
 
-  const handleStart = () => {
+  const handleStartExperience = () => {
     setStage("intro");
   };
 
   const handleIntroEnd = () => {
-    setStage("timer");
+    setFadeOutIntro(true);
+    setTimeout(() => {
+      setStage("timer");
+    }, 1000); // match fade duration
   };
 
   const handleStartOutro = () => {
@@ -43,11 +47,11 @@ const App = () => {
             <Route
               path="/"
               element={
-                <div className="min-h-screen bg-black flex items-center justify-center p-4">
-                  {stage === "idle" && (
+                <div className="min-h-screen bg-black flex items-center justify-center relative overflow-hidden">
+                  {stage === "start" && (
                     <button
+                      onClick={handleStartExperience}
                       className="bg-cyan-600 hover:bg-cyan-500 text-white px-8 py-3 rounded-xl font-mono text-lg border border-cyan-400 transition-all"
-                      onClick={handleStart}
                     >
                       Start Timer
                     </button>
@@ -56,12 +60,11 @@ const App = () => {
                   {stage === "intro" && (
                     <video
                       src="/clips/intro.webm"
-                      className="w-full h-auto"
+                      className={`w-full h-auto transition-opacity duration-1000 ${fadeOutIntro ? "opacity-0" : "opacity-100"}`}
                       autoPlay
                       muted={false}
                       playsInline
                       onEnded={handleIntroEnd}
-                      controls={false}
                     />
                   )}
 
@@ -80,7 +83,7 @@ const App = () => {
                       autoPlay
                       muted={false}
                       playsInline
-                      controls={false} // ✅ No buttons shown
+                      controls={false}
                     />
                   )}
                 </div>
